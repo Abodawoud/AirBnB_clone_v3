@@ -15,7 +15,6 @@ def all_states():
     for i in range(len):
         state = State.to_dict(list(storage.all(State).values())[i])
         new_list.append(state)
-    print(new_list)
     return new_list
 
 
