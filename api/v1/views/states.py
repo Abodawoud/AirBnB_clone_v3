@@ -7,7 +7,7 @@ from models.state import State
 from flask import abort, request, jsonify
 
 
-@app_views.route("/states", strict_slashes=False)
+@app_views.route("/states")
 def all_states():
     """ all states"""
     len = storage.count(State)
@@ -15,20 +15,19 @@ def all_states():
     for i in range(len):
         state = State.to_dict(list(storage.all(State).values())[i])
         new_list.append(state)
-    return new_list
+    return jsonify(new_list)
 
 
-@app_views.route("/states/<state_id>", strict_slashes=False)
+@app_views.route("/states/<state_id>")
 def get_state(state_id):
     """ get state"""
     state = storage.get(State, state_id)
     if not state:
         abort(404)
-    return State.to_dict(state)
+    return jsonify(State.to_dict(state))
 
 
-@app_views.route("/states/<state_id>", methods=['DELETE'],
-                 strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=['DELETE'])
 def delete_state(state_id):
     """ delete state"""
     state = storage.get(State, state_id)
@@ -36,10 +35,10 @@ def delete_state(state_id):
         abort(404)
     storage.delete(state)
     storage.save()
-    return {}, 200
+    return jsonify({}), 200
 
 
-@app_views.route("/states", methods=['POST'], strict_slashes=False)
+@app_views.route("/states", methods=['POST'])
 def post_state():
     """ post state"""
 
@@ -57,8 +56,7 @@ def post_state():
     return State.to_dict(new_state), 201
 
 
-@app_views.route("/states/<state_id>", methods=['PUT'],
-                 strict_slashes=False)
+@app_views.route("/states/<state_id>", methods=['PUT'])
 def put_state(state_id):
     """ put state"""
 
@@ -69,6 +67,7 @@ def put_state(state_id):
         request_data = request.get_json()
     except Exception:
         return jsonify('Not a JSON'), 400
+    print(request_data)
     for key, value in request_data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(state, key, value)
