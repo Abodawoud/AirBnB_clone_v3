@@ -18,7 +18,7 @@ def all_states():
     return new_list
 
 
-@app_views.route("/states/<string:state_id>", strict_slashes=False)
+@app_views.route("/states/<state_id>", strict_slashes=False)
 def get_state(state_id):
     """ get state"""
     state = storage.get(State, state_id)
@@ -27,7 +27,7 @@ def get_state(state_id):
     return State.to_dict(state)
 
 
-@app_views.route("/states/<string:state_id>", methods=['DELETE'],
+@app_views.route("/states/<state_id>", methods=['DELETE'],
                  strict_slashes=False)
 def delete_state(state_id):
     """ delete state"""
@@ -57,7 +57,7 @@ def post_state():
     return State.to_dict(new_state), 201
 
 
-@app_views.route("/states/<string:state_id>", methods=['PUT'],
+@app_views.route("/states/<state_id>", methods=['PUT'],
                  strict_slashes=False)
 def put_state(state_id):
     """ put state"""
