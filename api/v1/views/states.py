@@ -67,7 +67,6 @@ def put_state(state_id):
         request_data = request.get_json()
     except Exception:
         return jsonify('Not a JSON'), 400
-    print(request_data)
     for key, value in request_data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(state, key, value)
