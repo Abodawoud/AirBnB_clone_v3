@@ -43,32 +43,37 @@ def delete_state(state_id):
 def post_state():
     """ post state"""
 
-    request_data = request.get_json()
-    if not request_data:
+    try:
+        request_data = request.get_json()
+        if not request_data:
+            return jsonify({'message': 'Not a JSON'}), 400
+        if 'name' not in request_data:
+            return jsonify({'message': 'Missing name'}), 400
+
+        new_state = State(**request_data)
+        storage.new(new_state)
+        storage.save()
+
+        return State.to_dict(new_state), 201
+    except Exception:
         return jsonify({'message': 'Not a JSON'}), 400
-    if 'name' not in request_data:
-        return jsonify({'message': 'Missing name'}), 400
-
-    new_state = State(**request_data)
-    storage.new(new_state)
-    storage.save()
-
-    return State.to_dict(new_state), 201
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'],
                  strict_slashes=False)
 def put_state(state_id):
     """ put state"""
-
-    state = storage.get(State, state_id)
-    if not state:
-        abort(404)
-    request_data = request.get_json()
-    if not request_data:
+    try:
+        state = storage.get(State, state_id)
+        if not state:
+            abort(404)
+        request_data = request.get_json()
+        if not request_data:
+            return jsonify({'message': 'Not a JSON'}), 400
+        for key, value in request_data.items():
+            if key not in ['id', 'created_at', 'updated_at']:
+                setattr(state, key, value)
+        storage.save()
+        return State.to_dict(state), 200
+    except Exception:
         return jsonify({'message': 'Not a JSON'}), 400
-    for key, value in request_data.items():
-        if key not in ['id', 'created_at', 'updated_at']:
-            setattr(state, key, value)
-    storage.save()
-    return State.to_dict(state), 200
