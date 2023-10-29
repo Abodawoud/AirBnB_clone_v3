@@ -49,8 +49,7 @@ def post_state():
     if 'name' not in request_data:
         return jsonify({'message': 'Missing name'}), 400
 
-    new_state = State()
-    new_state.name = request_data['name']
+    new_state = State(**request_data)
     storage.new(new_state)
     storage.save()
 
