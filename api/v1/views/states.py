@@ -63,17 +63,15 @@ def post_state():
                  strict_slashes=False)
 def put_state(state_id):
     """ put state"""
-    try:
-        state = storage.get(State, state_id)
-        if not state:
-            abort(404)
-        request_data = request.get_json()
-        if not request_data:
-            return jsonify({'message': 'Not a JSON'}), 400
-        for key, value in request_data.items():
-            if key not in ['id', 'created_at', 'updated_at']:
-                setattr(state, key, value)
-        storage.save()
-        return State.to_dict(state), 200
-    except Exception:
+
+    state = storage.get(State, state_id)
+    if not state:
+        abort(404)
+    request_data = request.get_json()
+    if not request_data:
         return jsonify({'message': 'Not a JSON'}), 400
+    for key, value in request_data.items():
+        if key not in ['id', 'created_at', 'updated_at']:
+            setattr(state, key, value)
+    storage.save()
+    return State.to_dict(state), 200
