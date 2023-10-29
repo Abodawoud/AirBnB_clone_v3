@@ -43,11 +43,12 @@ def delete_state(state_id):
 def post_state():
     """ post state"""
 
-    request_data = request.get_json()
-    if not request_data:
-        return jsonify({'message': 'Not a JSON'}), 400
+    try:
+        request_data = request.get_json()
+    except Exception:
+        return jsonify('Not a JSON'), 400
     if 'name' not in request_data:
-        return jsonify({'message': 'Missing name'}), 400
+        return jsonify('Missing name'), 400
 
     new_state = State(**request_data)
     storage.new(new_state)
@@ -64,9 +65,10 @@ def put_state(state_id):
     state = storage.get(State, state_id)
     if not state:
         abort(404)
-    request_data = request.get_json()
-    if not request_data:
-        return jsonify({'message': 'Not a JSON'}), 400
+    try:
+        request_data = request.get_json()
+    except Exception:
+        return jsonify('Not a JSON'), 400
     for key, value in request_data.items():
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(state, key, value)
