@@ -53,7 +53,7 @@ def post_state():
     storage.new(new_state)
     storage.save()
 
-    return State.to_dict(new_state), 201
+    return jsonify(State.to_dict(new_state)), 201
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'])
@@ -72,4 +72,4 @@ def put_state(state_id):
         if key not in ['id', 'created_at', 'updated_at']:
             setattr(state, key, value)
     storage.save()
-    return State.to_dict(state), 200
+    return jsonify(State.to_dict(state)), 200
