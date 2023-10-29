@@ -43,20 +43,17 @@ def delete_state(state_id):
 def post_state():
     """ post state"""
 
-    try:
-        request_data = request.get_json()
-        if not request_data:
-            return jsonify({'message': 'Not a JSON'}), 400
-        if 'name' not in request_data:
-            return jsonify({'message': 'Missing name'}), 400
-
-        new_state = State(**request_data)
-        storage.new(new_state)
-        storage.save()
-
-        return State.to_dict(new_state), 201
-    except Exception:
+    request_data = request.get_json()
+    if not request_data:
         return jsonify({'message': 'Not a JSON'}), 400
+    if 'name' not in request_data:
+        return jsonify({'message': 'Missing name'}), 400
+
+    new_state = State(**request_data)
+    storage.new(new_state)
+    storage.save()
+
+    return State.to_dict(new_state), 201
 
 
 @app_views.route("/states/<state_id>", methods=['PUT'],
