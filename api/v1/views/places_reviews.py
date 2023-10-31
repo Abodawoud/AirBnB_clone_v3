@@ -10,7 +10,7 @@ from flask import abort, request, jsonify
 
 
 @app_views.route("/places/<place_id>/reviews")
-def get_review(place_id):
+def get_reviews(place_id):
     """ get reviews"""
     place = storage.get(Place, place_id)
     if not place:
@@ -19,7 +19,7 @@ def get_review(place_id):
 
 
 @app_views.route("/reviews/<review_id>")
-def get_place(review_id):
+def get_review(review_id):
     """ get review"""
     review = storage.get(Review, review_id)
     if not review:
